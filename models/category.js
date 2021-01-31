@@ -15,6 +15,7 @@ const Category = new Schema({
       'Wheels',
       'Headsets',
     ],
+    default: 'Frames',
   },
 });
 
