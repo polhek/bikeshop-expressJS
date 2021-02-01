@@ -3,37 +3,35 @@ html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/styles.css')
     style.
-      .active {
-        display:block;
+      .toggle-menu {
+         display:block;
+         opacity: 1;
+         height:auto;
       }
   body
-    div(class="mx-auto bg-black p-5 text-gray-400 font-mono")
-      nav(class="flex-row md:flex md:justify-between")
-        div(class="flex flex-row justify-between")
-          div(class="md:hidden")
-            svg.fill-current#hamburgerbtn(viewBox="0 0 100 80" width="40" heigh="40")
-              rect(width="100" height="20")
-              rect(y="30" width="100" height="20")
-              rect(y="60" width="100" height="20")
-        ul#mobileMenu(class="hidden flex pt-10 md:pt-5 md:flex md:flex-row text-lg")
-          li
-            a(class="pr-5 hover:text-white hover:underline")
-              | Bikeparts
-          li
-            a(class="pr-5 hover:text-white hover:underline")
-              | Categories
-          li
-            a(class="pr-5 hover:text-white hover:underline")
-              | Manufacturers
+    div(class="w-screen h-full  h-20 md:h-20 md:flex flex-col md:flex-row text-white  md:justify-center lg:justify-between items-center  font-mono bg-blue-700")
+      h1(class="pl-5 text-2xl hidden lg:block")
+        | Inventory app - Bikeshop
+      div(class="hamburger-container p-5 sm:inline-block md:hidden" onclick="myFunction(this)")
+        div(class="bar1 bg-white")
+        div(class="bar2 bg-white")
+        div(class="bar3 bg-white")
+
+      nav(class="pl-5 md:pl-0")
+        ul(class="hidden transition duration-600 ease-out h-0   opacity-0 md:opacity-100 mobile-menu md:flex justify-center mx-auto  md:flex-row md:justify-items-end items-center text-lg")
+          li(class="md:pr-5 hover:underline hover:text-gray-200")
+            | Home
+          li(class="md:pr-5 hover:underline hover:text-gray-200")
+            | Bikeparts
+          li(class="md:pr-5 hover:underline hover:text-gray-200")
+            | Categories
+          li(class="md:pr-5 hover:underline hover:text-gray-200")
+            | Manufacturers
 
     block content
-    script.
-      let hamburger = document.getElementById('hamburgerbtn');
-      let mobileMenu = document.getElementById('mobileMenu');
-      hamburger.addEventListener('click', function(){
-      mobileMenu.classList.toggle('active')
-      });
+    script(src="/scripts/menu.js")
 
 
 
