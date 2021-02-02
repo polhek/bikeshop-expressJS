@@ -27,7 +27,6 @@
 }
 
 .toggle-menu {
-  display: block;
   opacity: 1;
-  height: auto;
+  height: 120px;
 }

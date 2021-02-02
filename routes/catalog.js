@@ -1,8 +1,13 @@
 var express = require('express');
 var router = express.Router();
 
-router.get('/', function (req, res) {
-  res.render('index', { title: 'Welcome to the tailwind' });
-});
+const bikepartController = require('../controllers/bikepartController');
+
+// BIKEPART ROUTES
+router.get('/', bikepartController.index);
+
+// CATEGORY ROUTES
+
+// Manufacturer Route
 
 module.exports = router;

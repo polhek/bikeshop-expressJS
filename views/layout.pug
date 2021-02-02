@@ -20,7 +20,7 @@ html
         div(class="bar3 bg-white")
 
       nav(class="pl-5 md:pl-0")
-        ul(class="hidden transition duration-600 ease-out h-0   opacity-0 md:opacity-100 mobile-menu md:flex justify-center mx-auto  md:flex-row md:justify-items-end items-center text-lg")
+        ul(class="transition-all duration-500 block h-0 opacity-0 md:opacity-100 mobile-menu md:flex justify-center mx-auto  md:flex-row md:justify-items-end items-center text-lg")
           li(class="md:pr-5 hover:underline hover:text-gray-200")
             | Home
           li(class="md:pr-5 hover:underline hover:text-gray-200")
@@ -29,8 +29,8 @@ html
             | Categories
           li(class="md:pr-5 hover:underline hover:text-gray-200")
             | Manufacturers
-
-    block content
+    div(class="container lg:px-44 px-5 pt-8 mx-auto")
+      block content
     script(src="/scripts/menu.js")
 
 
