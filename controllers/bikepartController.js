@@ -30,3 +30,19 @@ exports.index = function (req, res, next) {
     }
   );
 };
+
+// Show all bikeparts
+exports.bikepartList = function (req, res, next) {
+  Bikepart.find({})
+    .populate('category')
+    .populate('manufacturer')
+    .exec(function (err, list_parts) {
+      if (err) {
+        return next(err);
+      }
+      res.render('bikepart_List', {
+        title: 'List of bikeparts',
+        list_parts: list_parts,
+      });
+    });
+};
