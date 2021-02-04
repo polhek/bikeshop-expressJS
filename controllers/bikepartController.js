@@ -46,3 +46,30 @@ exports.bikepartList = function (req, res, next) {
       });
     });
 };
+
+exports.bikepart_detail = function (req, res, next) {
+  async.parallel(
+    {
+      bikepart: function (callback) {
+        Bikepart.findById(req.params.id)
+          .populate('category')
+          .populate('manufacturer')
+          .exec(callback);
+      },
+    },
+    function (err, results) {
+      if (err) {
+        return next(err);
+      }
+      if (results.bikepart == null) {
+        var err = new Error('This bikepart cannot be found!');
+        err.status = 404;
+        return next(err);
+      }
+      res.render('bikepart_detail', {
+        title: results.bikepart.name,
+        bikepart: results.bikepart,
+      });
+    }
+  );
+};

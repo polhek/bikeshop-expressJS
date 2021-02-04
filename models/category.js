@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Bikepart = require('./bikepart');
 
 const Schema = mongoose.Schema;
 
@@ -17,6 +18,13 @@ const Category = new Schema({
     ],
     default: 'Frames',
   },
+});
+
+Category.virtual('count', {
+  ref: 'Bikepart',
+  localField: '_id',
+  foreignField: 'category',
+  count: true,
 });
 
 Category.virtual('url').get(function () {
