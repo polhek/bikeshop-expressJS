@@ -7,19 +7,19 @@ block content
         div(class="rounded border  shadow-2xl block border-blue-600 table mt-5 ")
                 table(class=" table-auto w-full w-max  font-mono bg-white  border-collapse border-blue-600")
                     thead
-                        th(class="border px-2 text-center border-blue-600 md:text-xl") Category
+                        th(class="border px-2 text-center border-blue-600 md:text-xl") Manufacturer
                         th(class="border px-2 text-center border-blue-600 md:text-xl") Nmr. items
                         th(class="border px-2 text-center border-blue-600 md:text-xl") Details
                     tbody
-                    each category in category_list
+                    each manufacturer in list_manufacturers
                         tr
-                            td(class="border px-2  text-center border-blue-600")= category.name
-                            td(class="border px-2  text-center border-blue-600")= category.count
+                            td(class="border px-2  text-center border-blue-600")= manufacturer.name
+                            td(class="border px-2  text-center border-blue-600")= manufacturer.count
                             td(class="border px-2 text-center border-blue-600")
-                                    - if (category.count > 0 )
-                                        a(href=category.url)
+                                    - if (manufacturer.count > 0 )
+                                        a(href=manufacturer.url)
                                             button(class="bg-blue-700 hover:bg-blue-800 hover:shadow-md mt-5 mb-5 rounded-full py-3 px-6 text-white") Details
                                     - else
                                         button(class="bg-red-700 cursor-not-allowed !disabled disabled:opacity-70  mt-5 mb-5 rounded-full py-3 px-6 text-white" disabled) No details
                     else
-                        h1(class="text-red text-5xl") There are no categories!
+                        h1(class="text-red text-5xl") There are no manufacturers!

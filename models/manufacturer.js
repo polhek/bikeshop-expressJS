@@ -8,6 +8,13 @@ const Manufacturer = new Schema({
   manufacturing_in: { type: String, required: true },
 });
 
+Manufacturer.virtual('count', {
+  ref: 'Bikepart',
+  localField: '_id',
+  foreignField: 'manufacturer',
+  count: true,
+});
+
 Manufacturer.virtual('url').get(function () {
   return '/catalog/manufacturer/' + this._id;
 });

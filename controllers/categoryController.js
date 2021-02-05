@@ -17,3 +17,34 @@ exports.categoryList = function (req, res, next) {
       });
     });
 };
+
+exports.categoryDetail = function (req, res, next) {
+  async.parallel(
+    {
+      category: function (callback) {
+        Category.findById(req.params.id).exec(callback);
+      },
+
+      category_items: function (callback) {
+        Bikepart.find({ category: req.params.id })
+          .populate('manufacturer')
+          .exec(callback);
+      },
+    },
+    function (err, results) {
+      if (err) {
+        next(err);
+      }
+      if (results.category == null) {
+        var err = new Error('Category not found');
+        err.status = 404;
+        return next(err);
+      }
+      res.render('category_detail', {
+        title: 'Category Detail',
+        category: results.category,
+        category_items: results.category_items,
+      });
+    }
+  );
+};
