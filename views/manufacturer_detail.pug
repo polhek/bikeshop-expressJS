@@ -1,0 +1,15 @@
+extends layout
+
+block content
+    h1(class="lg:text-4xl md:text-2xl text-xl font-extrabold p-5 font-mono")= title
+
+    h2(class="lg:text-3xl md:text-xl text lg font-extrabold ml-5 p-5 font-mono") #{manufacturer.name}:
+
+    ul(class="text-mono md:text-xl")
+    each item in manufacturer_items
+        li(class="text-mono md:text-lg") #{item.name}, Category: #{item.category.name}  , Manufactured by: #{item.manufacturer.name}, &nbsp
+            if item.stock > 0
+                | Still in Stock: &nbsp
+                span(class="text-green-800 font-bolder") #{item.stock}
+            else
+                span(class="text-red-800") No items in stock!

@@ -3,6 +3,7 @@ const Category = require('../models/category');
 const Manufacturer = require('../models/manufacturer');
 
 const async = require('async');
+const { body, validationResult } = require('express-validator');
 
 exports.index = function (req, res, next) {
   async.parallel(
@@ -73,3 +74,94 @@ exports.bikepart_detail = function (req, res, next) {
     }
   );
 };
+
+exports.bikepart_create_get = function (req, res, next) {
+  async.parallel(
+    {
+      manufacturers: function (callback) {
+        Manufacturer.find(callback);
+      },
+      categories: function (callback) {
+        Category.find(callback);
+      },
+    },
+    function (err, results) {
+      if (err) {
+        return next(err);
+      }
+      res.render('bikepart_form', {
+        title: 'Create new bikepart',
+        categories: results.categories,
+        manufacturers: results.manufacturers,
+      });
+    }
+  );
+};
+
+exports.bikepart_create_post = [
+  body('name', 'Name must not be empty.').trim().isLength({ min: 1 }).escape(),
+  body('description', 'Description must not be empty')
+    .trim()
+    .isLength({ min: 10 })
+    .escape(),
+  body('price', 'You must specify price.').isFloat({ min: 1, max: 9999999 }),
+  body('category', 'You must choose category.')
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body('stock', 'You must specify stock of item.').isInt({
+    min: 0,
+    max: 99999,
+  }),
+  body('manufacturer', 'You must specify manufacturer')
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+
+  (req, res, next) => {
+    const errors = validationResult(req);
+
+    const bikepart = new Bikepart({
+      name: req.body.name,
+      description: req.body.description,
+      price: req.body.price,
+      category: req.body.category,
+      stock: req.body.stock,
+      manufacturer: req.body.manufacturer,
+    });
+
+    if (!errors.isEmpty()) {
+      async.parallel(
+        {
+          manufacturers: function (callback) {
+            Manufacturer.find(callback);
+          },
+          categories: function (callback) {
+            Category.find(callback);
+          },
+        },
+        function (err, results) {
+          if (err) {
+            return next(err);
+          }
+
+          res.render('bikepart_form', {
+            title: 'Create new bikepart',
+            manufacturers: results.manufacturers,
+            categories: results.categories,
+            bikepart: bikepart,
+            errors: errors.array(),
+          });
+        }
+      );
+      return;
+    } else {
+      bikepart.save(function (err) {
+        if (err) {
+          return next(err);
+        }
+        res.redirect(bikepart.url);
+      });
+    }
+  },
+];
