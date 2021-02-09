@@ -1,7 +1,7 @@
 const Bikepart = require('../models/bikepart');
 const Category = require('../models/category');
 const Manufacturer = require('../models/manufacturer');
-
+const { body, validationResult } = require('express-validator');
 const async = require('async');
 const category = require('../models/category');
 
@@ -49,3 +49,56 @@ exports.manufacturerDetail = function (req, res, next) {
     }
   );
 };
+
+exports.manufacturer_create_get = function (req, res, next) {
+  res.render('manufacturer_form', { title: 'Create new manufacturer:' });
+};
+
+exports.manufacturer_create_post = [
+  body('name', 'Name of the manufacturer must nob be empty!')
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body('description', 'Description must not be empty')
+    .trim()
+    .isLength({ min: 10 })
+    .escape(),
+
+  (req, res, next) => {
+    const errors = validationResult(req);
+
+    const manufacturer = new Manufacturer({
+      name: req.body.name,
+      description: req.body.description,
+      manufacturing_in: req.body.manufacturing_in,
+    });
+
+    if (!errors.isEmpty()) {
+      res.render('manufacturer_form', {
+        title: 'Create new manufacturer',
+        manufacturer: manufacturer,
+        errors: errors.isArray(),
+      });
+      return;
+    } else {
+      Manufacturer.findOne({ name: req.body.name }).exec(function (
+        err,
+        found_manufacturer
+      ) {
+        if (err) {
+          return next(err);
+        }
+        if (found_manufacturer) {
+          res.redirect('/catalog/manufacturers');
+        } else {
+          manufacturer.save(function (err) {
+            if (err) {
+              return next(err);
+            }
+            res.redirect('/catalog/manufacturers');
+          });
+        }
+      });
+    }
+  },
+];

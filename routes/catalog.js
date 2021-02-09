@@ -24,6 +24,15 @@ router.get('/bikepart/:id', bikepartController.bikepart_detail);
 // list of categories
 router.get('/categories', categoryController.categoryList);
 
+router.get(
+  '/manufacturer/create',
+  manufacturerController.manufacturer_create_get
+);
+
+router.post(
+  '/manufacturer/create',
+  manufacturerController.manufacturer_create_post
+);
 // category detail
 router.get('/category/:id', categoryController.categoryDetail);
 
