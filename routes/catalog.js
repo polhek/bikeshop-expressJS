@@ -8,21 +8,31 @@ const manufacturerController = require('../controllers/manufacturerController');
 // BIKEPART ROUTES
 router.get('/', bikepartController.index);
 
+//get request for create
 router.get('/bikepart/create', bikepartController.bikepart_create_get);
 
+// post requrest for creating new bikepart
 router.post('/bikepart/create', bikepartController.bikepart_create_post);
-//all bikeparts
-router.get('/bikeparts', bikepartController.bikepartList);
+
+router.get('/bikepart/:id/delete', bikepartController.bikepart_delete_get);
+
+router.post('/bikepart/:id/delete', bikepartController.bikepart_delete_post);
+
+router.get('/bikepart/:id/update/', bikepartController.bikepart_update_get);
+
+router.post('/bikepart/:id/update/', bikepartController.bikepart_update_post);
 
 // bikepart detail
 router.get('/bikepart/:id', bikepartController.bikepart_detail);
+
+//all bikeparts
+router.get('/bikeparts', bikepartController.bikepartList);
 
 // add new bikepart form
 
 // CATEGORY ROUTES
 
 // list of categories
-router.get('/categories', categoryController.categoryList);
 
 router.get(
   '/manufacturer/create',
@@ -33,14 +43,27 @@ router.post(
   '/manufacturer/create',
   manufacturerController.manufacturer_create_post
 );
+
+router.get(
+  '/manufacturer/:id/update',
+  manufacturerController.manufacturer_update_get
+);
+
+router.post(
+  '/manufacturer/:id/update',
+  manufacturerController.manufacturer_update_post
+);
 // category detail
 router.get('/category/:id', categoryController.categoryDetail);
 
+router.get('/categories', categoryController.categoryList);
+
 // Manufacturer Route
-router.get('/manufacturers', manufacturerController.manufacturerList);
 
 //manufacturer detail
 
 router.get('/manufacturer/:id', manufacturerController.manufacturerDetail);
+
+router.get('/manufacturers', manufacturerController.manufacturerList);
 
 module.exports = router;

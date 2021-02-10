@@ -1,0 +1,11 @@
+extends layout
+
+block content
+    div(class="flex justify-center text-mono")
+        div(class="w-3/4 shadow bg-white rounded text-center p-5")
+            h1(class="text-3xl text-bold")= title
+            div(class="flex justify-center text-mono")
+                form(method="POST", action='')
+                    button(type="submit" class=" m-5 bg-red-700 hover:bg-red-800 hover:shadow rounded-full py-3 px-6 text-white") YES
+                a(href=bikepart.url)
+                    button(class="bg-blue-700 hover:bg-blue-800 hover:shadow rounded-full  m-5 py-3 px-6 text-white") NO

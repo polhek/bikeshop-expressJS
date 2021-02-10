@@ -36,7 +36,7 @@ exports.categoryDetail = function (req, res, next) {
         next(err);
       }
       if (results.category == null) {
-        var err = new Error('Category not found');
+        let err = new Error('Category not found');
         err.status = 404;
         return next(err);
       }

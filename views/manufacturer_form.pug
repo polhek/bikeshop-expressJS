@@ -16,9 +16,9 @@ block content
                     label(for='manufacturing_in' class="font-bold") Manufactured in:
 
                     select#country.form-control(name='manufacturing_in' class="bg-gray-200 rounded" )
-                        if manufacturer
-                            option(value=manufacturer.manufacturing_in) #{manufacturing_in}
-                        else
+                            if manufacturer
+                                option(value=manufacturer.manufacturing_in) #{manufacturer.manufacturing_in}
+
                             option(value='Afghanistan') Afghanistan
                             option(value='Åland Islands') Åland Islands
                             option(value='Albania') Albania
@@ -264,6 +264,7 @@ block content
                             option(value='Zambia') Zambia
                             option(value='Zimbabwe') Zimbabwe
             button(type='submit' class="bg-blue-700 hover:bg-blue-800 hover:shadow-md m-5 text-white font-bold py-2 px-4 text-xl rounded-full") Submit!
+
 
     if errors
         ul(class="text-red font-mono font-bold")

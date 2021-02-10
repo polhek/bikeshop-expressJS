@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const Bikepart = require('./bikepart');
 
 const Schema = mongoose.Schema;
 

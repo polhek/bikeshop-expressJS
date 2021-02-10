@@ -3,7 +3,6 @@ const Category = require('../models/category');
 const Manufacturer = require('../models/manufacturer');
 const { body, validationResult } = require('express-validator');
 const async = require('async');
-const category = require('../models/category');
 
 exports.manufacturerList = function (req, res, next) {
   Manufacturer.find()
@@ -50,7 +49,7 @@ exports.manufacturerDetail = function (req, res, next) {
   );
 };
 
-exports.manufacturer_create_get = function (req, res, next) {
+exports.manufacturer_create_get = function (req, res) {
   res.render('manufacturer_form', { title: 'Create new manufacturer:' });
 };
 
@@ -99,6 +98,66 @@ exports.manufacturer_create_post = [
           });
         }
       });
+    }
+  },
+];
+
+exports.manufacturer_update_get = function (req, res, next) {
+  Manufacturer.findById(req.params.id, (err, manufacturer) => {
+    if (err) {
+      return next(err);
+    }
+    if (manufacturer == null) {
+      let err = new Error('Manufacturer cannot be found!');
+      err.status = 404;
+      return next(err);
+    }
+    res.render('manufacturer_form', {
+      title: 'Update manufacturer',
+      manufacturer: manufacturer,
+    });
+  });
+};
+
+exports.manufacturer_update_post = [
+  body('name', 'Name of the manufacturer must nob be empty!')
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body('description', 'Description must not be empty')
+    .trim()
+    .isLength({ min: 10 })
+    .escape(),
+
+  (req, res, next) => {
+    const errors = validationResult(req);
+
+    const manufacturer = new Manufacturer({
+      name: req.body.name,
+      description: req.body.description,
+      manufacturing_in: req.body.manufacturing_in,
+      _id: req.params.id,
+    });
+
+    if (!errors.isEmpty()) {
+      res.render('manufacturer_form', {
+        title: 'Update manufacturer',
+        manufacturer: manufacturer,
+        errors: errors.isArray(),
+      });
+      return;
+    } else {
+      Manufacturer.findByIdAndUpdate(
+        req.params.id,
+        manufacturer,
+        {},
+        function (err, themanufacturer) {
+          if (err) {
+            return next(err);
+          }
+          res.redirect('/catalog/manufacturers');
+        }
+      );
     }
   },
 ];

@@ -63,7 +63,7 @@ exports.bikepart_detail = function (req, res, next) {
         return next(err);
       }
       if (results.bikepart == null) {
-        var err = new Error('This bikepart cannot be found!');
+        let err = new Error('This bikepart cannot be found!');
         err.status = 404;
         return next(err);
       }
@@ -165,3 +165,137 @@ exports.bikepart_create_post = [
     }
   },
 ];
+
+exports.bikepart_update_get = (req, res, next) => {
+  async.parallel(
+    {
+      bikepart: function (callback) {
+        Bikepart.findById(req.params.id)
+          .populate('manufacturer')
+          .populate('category')
+          .exec(callback);
+      },
+      manufacturers: function (callback) {
+        Manufacturer.find(callback);
+      },
+      categories: function (callback) {
+        Category.find(callback);
+      },
+    },
+    function (err, results) {
+      if (err) {
+        return next(err);
+      }
+      if (results.bikepart == null) {
+        let err = new Error('Bikepart not found!');
+        err.status = 404;
+        return next(err);
+      }
+      res.render('bikepart_form', {
+        title: 'Update bikepart',
+        manufacturers: results.manufacturers,
+        categories: results.categories,
+        bikepart: results.bikepart,
+      });
+    }
+  );
+};
+
+exports.bikepart_update_post = [
+  body('name', 'Name must not be empty.').trim().isLength({ min: 1 }).escape(),
+  body('description', 'Description must not be empty')
+    .trim()
+    .isLength({ min: 10 })
+    .escape(),
+  body('price', 'You must specify price.').isFloat({ min: 1, max: 9999999 }),
+  body('category', 'You must choose category.')
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body('stock', 'You must specify stock of item.').isInt({
+    min: 0,
+    max: 99999,
+  }),
+  body('manufacturer', 'You must specify manufacturer')
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+
+  (req, res, next) => {
+    const errors = validationResult(req);
+
+    const bikepart = new Bikepart({
+      name: req.body.name,
+      description: req.body.description,
+      price: req.body.price,
+      category: req.body.category,
+      stock: req.body.stock,
+      manufacturer: req.body.manufacturer,
+      _id: req.params.id,
+    });
+
+    if (!errors.isEmpty()) {
+      async.parallel(
+        {
+          manufacturers: function (callback) {
+            Manufacturer.find(callback);
+          },
+          categories: function (callback) {
+            Category.find(callback);
+          },
+        },
+        function (err, results) {
+          if (err) {
+            return next(err);
+          }
+
+          res.render('bikepart_form', {
+            title: 'Update Bikepart',
+            manufacturers: results.manufacturers,
+            categories: results.categories,
+            bikepart: results.bikepart,
+            errors: errors.array(),
+          });
+        }
+      );
+      return;
+    } else {
+      Bikepart.findByIdAndUpdate(
+        req.params.id,
+        bikepart,
+        {},
+        function (err, thebikepart) {
+          if (err) {
+            return next(err);
+          }
+          res.redirect(thebikepart.url);
+        }
+      );
+    }
+  },
+];
+
+exports.bikepart_delete_get = function (req, res, next) {
+  Bikepart.findById(req.params.id)
+    .populate('manufacturer')
+    .populate('category')
+    .exec(function (err, bikepart) {
+      if (err) {
+        return next(err);
+      }
+      res.render('bikepart_delete', {
+        title: 'Do you really want to delete this bikepart?',
+        bikepart: bikepart,
+      });
+    });
+};
+
+exports.bikepart_delete_post = function (req, res, next) {
+  console.log(req.params.id);
+  Bikepart.findByIdAndRemove(req.params.id, function deleteBikepart(err) {
+    if (err) {
+      return next(err);
+    }
+    res.redirect('/catalog/bikeparts');
+  });
+};

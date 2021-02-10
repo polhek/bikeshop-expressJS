@@ -33,7 +33,7 @@ block content
                             option(value=manufacturer._id selected=(manufacturer._id.toString() === bikepart.manufacturer._id.toString() ? 'selected' : false)) #{manufacturer.name}
                         else
                             option(value=manufacturer._id) #{manufacturer.name}
-            button(type='submit' class="bg-blue-700 hover:bg-blue-800 hover:shadow-md m-5 text-white font-bold py-2 px-4 text-xl rounded-full") Submit!
+            button(type='submit' class="bg-blue-700 text-mono hover:bg-blue-800 hover:shadow-md m-5 text-white font-bold py-2 px-4 text-xl rounded-full") Submit!
 
     if errors
         ul(class="text-red font-mono font-bold")
