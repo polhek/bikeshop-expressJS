@@ -20,7 +20,8 @@ block content
                                         a(href=manufacturer.url)
                                             button(class="bg-blue-700 hover:bg-blue-800 hover:shadow-md mt-5 mb-5 rounded-full py-3 px-6 text-white") Details
                                     - else
-                                        button(class="bg-red-700 cursor-not-allowed !disabled disabled:opacity-70  mt-5 mb-5 rounded-full py-3 px-6 text-white" disabled) No details
+                                        a(href=manufacturer.url+'/delete')
+                                            button(class="bg-red-700   disabled:opacity-70  mt-5 mb-5 rounded-full py-3 px-6 text-white" ) Delete!
 
                     else
                         h1(class="text-red text-5xl") There are no manufacturers!

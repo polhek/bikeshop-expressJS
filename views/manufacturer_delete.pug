@@ -1,0 +1,26 @@
+extends layout
+
+block content
+    h1(class="lg:text-4xl md:text-2xl text-xl font-extrabold p-5 font-mono") #{title}: #{manufacturer.name}
+
+
+    if manufacturer_items.length
+        p(class="text-xl font-mono") Delete the following bikeparts, before you can delete this manufacturer!
+
+        div
+
+            h4(class="lg:text-2xl md:text-xl text-lg font-bold p-5 font-mono") Bikeparts:
+
+            ul(class="text-mono md:text-xl")
+            each item in manufacturer_items
+                li(class="text-mono md:text-lg")
+                    a(href=item.url class="hover:text-blue-600") #{item.name}
+
+    else
+        p Do you really want to delete this manufacturer?
+
+        form(method='POST', action='')
+            input#manufacturerid(type="hidden", name="manufacturerid", required="true", value=manufacturer._id)
+            button(type="submit" class=" m-5 bg-red-700 hover:bg-red-800 hover:shadow rounded-full py-3 px-6 text-white") Delete!
+
+

@@ -1,5 +1,5 @@
 const Bikepart = require('../models/bikepart');
-const Category = require('../models/category');
+
 const Manufacturer = require('../models/manufacturer');
 const { body, validationResult } = require('express-validator');
 const async = require('async');
@@ -151,7 +151,7 @@ exports.manufacturer_update_post = [
         req.params.id,
         manufacturer,
         {},
-        function (err, themanufacturer) {
+        function (err) {
           if (err) {
             return next(err);
           }
@@ -161,3 +161,66 @@ exports.manufacturer_update_post = [
     }
   },
 ];
+
+exports.manufacturer_delete_get = function (req, res, next) {
+  async.parallel(
+    {
+      manufacturer: function (callback) {
+        Manufacturer.findById(req.params.id).exec(callback);
+      },
+      manufacturer_bikeparts: function (callback) {
+        Bikepart.find({ manufacturer: req.params.id }).exec(callback);
+      },
+    },
+    function (err, results) {
+      if (err) {
+        return next(err);
+      }
+      if (results.manufacturer == null) {
+        res.redirect('/catalog/manufacturers');
+      }
+      res.render('manufacturer_delete', {
+        title: 'Delete manufacturer',
+        manufacturer: results.manufacturer,
+        manufacturer_items: results.manufacturer_bikeparts,
+      });
+    }
+  );
+};
+
+exports.manufacturer_delete_post = function (req, res, next) {
+  async.parallel(
+    {
+      manufacturer: function (callback) {
+        Manufacturer.findById(req.body.manufacturerid).exec(callback);
+      },
+      manufacturer_bikeparts: function (callback) {
+        Bikepart.find({ manufacturer: req.body.manufacturerid }).exec(callback);
+      },
+    },
+    function (err, results) {
+      if (err) {
+        console.log(err);
+        return next(err);
+      }
+      if (results.manufacturer_bikeparts.length > 0) {
+        res.render('manufacturer_delete', {
+          title: 'Delete manufacturer',
+          manufacturer: results.manufacturer,
+          manufacturer_items: results.manufacturer_bikeparts,
+        });
+        return;
+      } else {
+        Manufacturer.findByIdAndRemove(
+          req.body.manufacturerid,
+          function deleteManufacturer(err) {
+            if (err) {
+              return next(err);
+            }
+            res.redirect('/catalog/manufacturers');
+          }
+        );
+      }
+    }
+  );
+};

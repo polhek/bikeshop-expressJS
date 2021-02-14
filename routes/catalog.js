@@ -45,6 +45,16 @@ router.post(
 );
 
 router.get(
+  '/manufacturer/:id/delete',
+  manufacturerController.manufacturer_delete_get
+);
+
+router.post(
+  '/manufacturer/:id/delete',
+  manufacturerController.manufacturer_delete_post
+);
+
+router.get(
   '/manufacturer/:id/update',
   manufacturerController.manufacturer_update_get
 );
@@ -53,6 +63,11 @@ router.post(
   '/manufacturer/:id/update',
   manufacturerController.manufacturer_update_post
 );
+
+router.get('/manufacturers', manufacturerController.manufacturerList);
+
+router.get('/manufacturer/:id', manufacturerController.manufacturerDetail);
+
 // category detail
 router.get('/category/:id', categoryController.categoryDetail);
 
@@ -61,9 +76,5 @@ router.get('/categories', categoryController.categoryList);
 // Manufacturer Route
 
 //manufacturer detail
-
-router.get('/manufacturer/:id', manufacturerController.manufacturerDetail);
-
-router.get('/manufacturers', manufacturerController.manufacturerList);
 
 module.exports = router;
