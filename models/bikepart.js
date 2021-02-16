@@ -13,6 +13,7 @@ const BikepartSchema = new Schema({
     ref: 'Manufacturer',
     required: true,
   },
+  imgFile: { type: String, required: true },
 });
 
 BikepartSchema.virtual('url').get(function () {

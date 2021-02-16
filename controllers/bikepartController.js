@@ -1,8 +1,9 @@
 const Bikepart = require('../models/bikepart');
 const Category = require('../models/category');
 const Manufacturer = require('../models/manufacturer');
-
+const fs = require('fs');
 const async = require('async');
+var path = require('path');
 const { body, validationResult } = require('express-validator');
 
 exports.index = function (req, res, next) {
@@ -128,9 +129,11 @@ exports.bikepart_create_post = [
       category: req.body.category,
       stock: req.body.stock,
       manufacturer: req.body.manufacturer,
+      imgFile: req.file.path,
     });
 
     if (!errors.isEmpty()) {
+      fs.unlink(req.file.path);
       async.parallel(
         {
           manufacturers: function (callback) {
@@ -201,6 +204,7 @@ exports.bikepart_update_get = (req, res, next) => {
   );
 };
 
+//! Update se za sliko dat save
 exports.bikepart_update_post = [
   body('name', 'Name must not be empty.').trim().isLength({ min: 1 }).escape(),
   body('description', 'Description must not be empty')
@@ -222,7 +226,25 @@ exports.bikepart_update_post = [
     .escape(),
 
   (req, res, next) => {
+    let imgURL = '';
+    if (req.file) {
+      imgURL = req.file.path;
+
+      const deleteIMG = path.resolve(req.body.imageURL);
+      if (deleteIMG.length > 0) {
+        fs.unlink(deleteIMG, (err) => {
+          if (err) {
+            return next(err);
+          }
+          console.log('path/file.txt was deleted');
+        });
+      }
+    } else {
+      imgURL = req.body.imgFile;
+    }
+
     const errors = validationResult(req);
+    console.log(req.body);
 
     const bikepart = new Bikepart({
       name: req.body.name,
@@ -231,10 +253,12 @@ exports.bikepart_update_post = [
       category: req.body.category,
       stock: req.body.stock,
       manufacturer: req.body.manufacturer,
+      imgFile: imgURL,
       _id: req.params.id,
     });
 
     if (!errors.isEmpty()) {
+      fs.unlink(req.file.path);
       async.parallel(
         {
           manufacturers: function (callback) {
@@ -260,6 +284,7 @@ exports.bikepart_update_post = [
       );
       return;
     } else {
+      console.log(req.body.imgFile);
       Bikepart.findByIdAndUpdate(
         req.params.id,
         bikepart,

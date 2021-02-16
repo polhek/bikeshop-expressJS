@@ -1,5 +1,18 @@
 var express = require('express');
+const multer = require('multer');
+const path = require('path');
 var router = express.Router();
+
+const storage = multer.diskStorage({
+  destination(req, file, cb) {
+    cb(null, 'public/images');
+  },
+  filename(req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({ storage });
 
 const bikepartController = require('../controllers/bikepartController');
 const categoryController = require('../controllers/categoryController');
@@ -12,7 +25,11 @@ router.get('/', bikepartController.index);
 router.get('/bikepart/create', bikepartController.bikepart_create_get);
 
 // post requrest for creating new bikepart
-router.post('/bikepart/create', bikepartController.bikepart_create_post);
+router.post(
+  '/bikepart/create',
+  upload.single('imgFile'),
+  bikepartController.bikepart_create_post
+);
 
 router.get('/bikepart/:id/delete', bikepartController.bikepart_delete_get);
 
@@ -20,7 +37,11 @@ router.post('/bikepart/:id/delete', bikepartController.bikepart_delete_post);
 
 router.get('/bikepart/:id/update/', bikepartController.bikepart_update_get);
 
-router.post('/bikepart/:id/update/', bikepartController.bikepart_update_post);
+router.post(
+  '/bikepart/:id/update/',
+  upload.single('imgFile'),
+  bikepartController.bikepart_update_post
+);
 
 // bikepart detail
 router.get('/bikepart/:id', bikepartController.bikepart_detail);
