@@ -14,8 +14,9 @@ var app = express();
 var mongoose = require('mongoose');
 
 //Set up default mongoose connection
-var mongoDB =
+var dev_db_url =
   'mongodb+srv://polhek:jureslovenija@cluster0.cifrh.mongodb.net/bike_shop?retryWrites=true&w=majority';
+var mongoDB = process.env.MONGODB_URI || dev_db_url;
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 
 //Get the default connection

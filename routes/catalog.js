@@ -31,7 +31,7 @@ function authenticatorFn(req, res, next) {
     // MyRealmName can be changed to anything, will be prompted to the user
     res.setHeader('WWW-Authenticate', 'Basic realm="MyRealmName"');
     // this will displayed in the browser when authorization is cancelled
-    res.redirect(302, '/');
+    res.end('Unauthorized');
   } else {
     // continue with processing, user was authenticated
     next();
