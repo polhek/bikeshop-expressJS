@@ -14,6 +14,36 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
+function authenticatorFn(req, res, next) {
+  var auth;
+
+  // check whether an autorization header was send
+  if (req.headers.authorization) {
+    auth = new Buffer(req.headers.authorization.substring(6), 'base64')
+      .toString()
+      .split(':');
+  }
+
+  if (!auth || auth[0] !== 'testuser' || auth[1] !== 'testpassword') {
+    // any of the tests failed
+    // send an Basic Auth request (HTTP Code: 401 Unauthorized)
+    res.statusCode = 401;
+    // MyRealmName can be changed to anything, will be prompted to the user
+    res.setHeader('WWW-Authenticate', 'Basic realm="MyRealmName"');
+    // this will displayed in the browser when authorization is cancelled
+    res.redirect(302, '/');
+  } else {
+    // continue with processing, user was authenticated
+    next();
+  }
+}
+
+// function getUnauthorizedResponse(req) {
+//   return req.auth
+//     ? 'Credentials ' + req.auth.user + ':' + req.auth.password + ' rejected'
+//     : 'No credentials provided';
+// }
+
 const bikepartController = require('../controllers/bikepartController');
 const categoryController = require('../controllers/categoryController');
 const manufacturerController = require('../controllers/manufacturerController');
@@ -22,7 +52,11 @@ const manufacturerController = require('../controllers/manufacturerController');
 router.get('/', bikepartController.index);
 
 //get request for create
-router.get('/bikepart/create', bikepartController.bikepart_create_get);
+router.get(
+  '/bikepart/create',
+  authenticatorFn,
+  bikepartController.bikepart_create_get
+);
 
 // post requrest for creating new bikepart
 router.post(
@@ -31,11 +65,19 @@ router.post(
   bikepartController.bikepart_create_post
 );
 
-router.get('/bikepart/:id/delete', bikepartController.bikepart_delete_get);
+router.get(
+  '/bikepart/:id/delete',
+  authenticatorFn,
+  bikepartController.bikepart_delete_get
+);
 
 router.post('/bikepart/:id/delete', bikepartController.bikepart_delete_post);
 
-router.get('/bikepart/:id/update/', bikepartController.bikepart_update_get);
+router.get(
+  '/bikepart/:id/update/',
+  authenticatorFn,
+  bikepartController.bikepart_update_get
+);
 
 router.post(
   '/bikepart/:id/update/',
@@ -57,6 +99,7 @@ router.get('/bikeparts', bikepartController.bikepartList);
 
 router.get(
   '/manufacturer/create',
+  authenticatorFn,
   manufacturerController.manufacturer_create_get
 );
 
@@ -67,6 +110,7 @@ router.post(
 
 router.get(
   '/manufacturer/:id/delete',
+  authenticatorFn,
   manufacturerController.manufacturer_delete_get
 );
 
@@ -77,6 +121,7 @@ router.post(
 
 router.get(
   '/manufacturer/:id/update',
+  authenticatorFn,
   manufacturerController.manufacturer_update_get
 );
 

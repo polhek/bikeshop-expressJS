@@ -1,6 +1,7 @@
 const Bikepart = require('../models/bikepart');
 const Category = require('../models/category');
 const Manufacturer = require('../models/manufacturer');
+
 const fs = require('fs');
 const async = require('async');
 var path = require('path');
@@ -204,7 +205,6 @@ exports.bikepart_update_get = (req, res, next) => {
   );
 };
 
-//! Update se za sliko dat save
 exports.bikepart_update_post = [
   body('name', 'Name must not be empty.').trim().isLength({ min: 1 }).escape(),
   body('description', 'Description must not be empty')

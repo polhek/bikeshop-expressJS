@@ -4,7 +4,7 @@ block content
     h1(class="lg:text-4xl md:text-2xl text-xl font-extrabold p-5 font-mono") #{title}:
 
     form(method="POST" action='' enctype="multipart/form-data")
-        input#imageURL(type="hidden" name="imageURL" value=bikepart.imgFile)
+        input#imageURL(type="hidden" name="imageURL" value=(undefined===bikepart ? "" : bikepart.imgFile))
         div(class="bg-white p-5 rounded-xl shadow font-mono flex flex-col items-center justify-center")
             div(class="flex flex-col w-4/5")
                 label(for='name' class="font-bold") Name:
