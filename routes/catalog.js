@@ -32,17 +32,15 @@ function authenticatorFn(req, res, next) {
     res.setHeader('WWW-Authenticate', 'Basic realm="MyRealmName"');
     // this will displayed in the browser when authorization is cancelled
     res.end('Unauthorized');
+
+    if (res.statusCode == 401) {
+      res.redirect('/');
+    }
   } else {
     // continue with processing, user was authenticated
     next();
   }
 }
-
-// function getUnauthorizedResponse(req) {
-//   return req.auth
-//     ? 'Credentials ' + req.auth.user + ':' + req.auth.password + ' rejected'
-//     : 'No credentials provided';
-// }
 
 const bikepartController = require('../controllers/bikepartController');
 const categoryController = require('../controllers/categoryController');

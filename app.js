@@ -3,7 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
+const dotenv = require('dotenv').config();
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var catalogRouter = require('./routes/catalog');
@@ -14,8 +14,7 @@ var app = express();
 var mongoose = require('mongoose');
 
 //Set up default mongoose connection
-var dev_db_url =
-  'mongodb+srv://polhek:jureslovenija@cluster0.cifrh.mongodb.net/bike_shop?retryWrites=true&w=majority';
+var dev_db_url = process.env.MONGODB_URL;
 var mongoDB = process.env.MONGODB_URI || dev_db_url;
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 
