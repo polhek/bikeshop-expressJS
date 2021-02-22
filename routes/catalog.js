@@ -32,10 +32,6 @@ function authenticatorFn(req, res, next) {
     res.setHeader('WWW-Authenticate', 'Basic realm="MyRealmName"');
     // this will displayed in the browser when authorization is cancelled
     res.end('Unauthorized');
-
-    if (res.statusCode == 401) {
-      res.redirect('/');
-    }
   } else {
     // continue with processing, user was authenticated
     next();
